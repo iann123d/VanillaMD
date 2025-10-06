@@ -3,8 +3,13 @@ class ContentElement extends HTMLElement {
     const src = this.getAttribute("src");
     if (!src) return;
 
-    const md = await fetch(src).then(r => r.text());
-    this.innerHTML = this.renderMarkdown(md);
+    try {
+      const md = await fetch(src).then(r => r.text());
+      this.innerHTML = this.renderMarkdown(md);
+    } catch (err) {
+      console.error("Failed to load Markdown:", err);
+      this.innerHTML = "<p>Failed to load content.</p>";
+    }
   }
 
   renderMarkdown(md) {
@@ -13,50 +18,52 @@ class ContentElement extends HTMLElement {
     // Escape HTML
     html = html.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
-    // Horizontal rules
+    // --- Horizontal rules ---
     html = html.replace(/^---$/gm, "<hr>");
 
-    // Headings
-    html = html.replace(/^### (.*)$/gm, "<h3>$1</h3>");
-    html = html.replace(/^## (.*)$/gm, "<h2>$1</h2>");
-    html = html.replace(/^# (.*)$/gm, "<h1>$1</h1>");
-
-    // Bold & Italics
-    html = html.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
-    html = html.replace(/\*(.*?)\*/g, "<em>$1</em>");
-
-    // Inline code
-    html = html.replace(/`(.*?)`/g, "<code>$1</code>");
-
-    // Links
-    html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
-
-    // Images
-    html = html.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1">');
-
-    // Blockquotes
-    html = html.replace(/^> (.*)$/gm, "<blockquote>$1</blockquote>");
-
-    // Lists
-    // Unordered
-    html = html.replace(/^\s*-\s+(.*)$/gm, "<li>$1</li>");
-    // Wrap <li> in <ul>
-    html = html.replace(/(<li>.*<\/li>)/gs, "<ul>$1</ul>");
-
-    // Ordered
-    html = html.replace(/^\s*\d+\.\s+(.*)$/gm, "<li>$1</li>");
-    html = html.replace(/(<li>.*<\/li>)/gs, "<ol>$1</ol>");
-
-    // Code blocks (```lang)
-    html = html.replace(/```(\w*)\n([\s\S]*?)```/g, function(_, lang, code) {
+    // --- Code blocks ```lang ---
+    html = html.replace(/```(\w*)\r?\n([\s\S]*?)```/g, function(_, lang, code) {
       return `<pre><code class="language-${lang}">${code}</code></pre>`;
     });
 
-    // Wrap paragraphs
+    // --- Blockquotes ---
+    html = html.replace(/^> (.+)$/gm, "<blockquote>$1</blockquote>");
+
+    // --- Headings ---
+    html = html.replace(/^### (.+)$/gm, "<h3>$1</h3>");
+    html = html.replace(/^## (.+)$/gm, "<h2>$1</h2>");
+    html = html.replace(/^# (.+)$/gm, "<h1>$1</h1>");
+
+    // --- Lists ---
+    // Unordered
+    html = html.replace(/^\s*-\s+(.+)$/gm, "<li>$1</li>");
+    html = html.replace(/(<li>[\s\S]*?<\/li>)/g, "<ul>$1</ul>");
+
+    // Ordered
+    html = html.replace(/^\s*\d+\.\s+(.+)$/gm, "<li>$1</li>");
+    html = html.replace(/(<li>[\s\S]*?<\/li>)/g, "<ol>$1</ol>");
+
+    // --- Bold & Italics ---
+    html = html.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+    html = html.replace(/\*(.*?)\*/g, "<em>$1</em>");
+
+    // --- Inline code ---
+    html = html.replace(/`([^`\n]+)`/g, "<code>$1</code>");
+
+    // --- Links ---
+    html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
+
+    // --- Images ---
+    html = html.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1">');
+
+    // --- Wrap remaining lines in <p> ---
     html = html.replace(/^(?!<h|<ul>|<ol>|<pre>|<blockquote>|<img|<hr|<code|<li>)(.+)$/gm, "<p>$1</p>");
 
     return html;
   }
 }
 
-customElements.define("mark-down", ContentElement);
+// Only define once
+if (!customElements.get("mark-down")) {
+  customElements.define("mark-down", ContentElement);
+}
