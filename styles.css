@@ -1,0 +1,110 @@
+/* Base layout */
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  max-width: 800px;
+  margin: 2rem auto;
+  line-height: 1.6;
+  padding: 0 1rem;
+  color: #1c1c1e;
+  background-color: #fefefe;
+}
+
+/* Headers */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+  color: #111;
+}
+
+/* Header sizes */
+h1 { font-size: 2.2rem; }
+h2 { font-size: 1.8rem; }
+h3 { font-size: 1.5rem; }
+
+/* Paragraphs */
+p {
+  margin-bottom: 1rem;
+}
+
+/* Lists */
+ul, ol {
+  padding-left: 2rem;
+  margin-bottom: 1rem;
+}
+
+li {
+  margin-bottom: 0.5rem;
+}
+
+/* Links */
+a {
+  color: #0a84ff;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Blockquotes */
+blockquote {
+  border-left: 4px solid #ccc;
+  padding-left: 1rem;
+  color: #555;
+  font-style: italic;
+  margin: 1rem 0;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+}
+
+/* Code styling */
+code {
+  font-family: "Fira Code", monospace;
+  background-color: #f2f2f7;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.95rem;
+}
+
+pre {
+  background-color: #f2f2f7;
+  padding: 1rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+/* Images */
+img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  margin: 1rem 0;
+}
+
+/* Horizontal rules */
+hr {
+  border: none;
+  border-top: 1px solid #ccc;
+  margin: 2rem 0;
+}
+
+/* Header & Footer */
+header, footer {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #666;
+  font-size: 0.95rem;
+}
+
+footer strong {
+  color: #111;
+}
+
+/* Optional: make links in footer subtle */
+footer a {
+  color: #0a84ff;
+  text-decoration: none;
+}
