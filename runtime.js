@@ -59,4 +59,4 @@ class ContentElement extends HTMLElement {
   }
 }
 
-customElements.define("content", ContentElement);
+customElements.define("mark-down", ContentElement);
