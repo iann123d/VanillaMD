@@ -13,45 +13,141 @@ class ContentElement extends HTMLElement {
   }
 
   renderMarkdown(md) {
-    let html = md;
+    // Split into lines for easier block processing
+    const lines = md.split(/\r?\n/);
+    let html = '';
+    let inCode = false, codeLang = '', codeBuffer = [];
+    let inBlockquote = false, blockquoteBuffer = [];
+    let inList = false, listType = '', listBuffer = [];
 
-    // --- Code blocks first (```lang) ---
-    html = html.replace(/```(\w*)\r?\n([\s\S]*?)```/g, function(_, lang, code) {
-      code = code.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-      return `<pre><code class="language-${lang}">${code}</code></pre>`;
-    });
+    function flushCode() {
+      if (codeBuffer.length) {
+        const code = codeBuffer.join('\n').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        html += `<pre><code class="language-${codeLang}">${code}</code></pre>`;
+        codeBuffer = [];
+        codeLang = '';
+      }
+    }
+    function flushBlockquote() {
+      if (blockquoteBuffer.length) {
+        html += `<blockquote>${blockquoteBuffer.join(' ')}</blockquote>`;
+        blockquoteBuffer = [];
+      }
+    }
+    function flushList() {
+      if (listBuffer.length) {
+        const tag = listType === 'ol' ? 'ol' : 'ul';
+        html += `<${tag}>${listBuffer.join('')}</${tag}>`;
+        listBuffer = [];
+        listType = '';
+      }
+    }
 
-    // --- Blockquotes ---
-    html = html.replace(/^> (.+)$/gm, "<blockquote>$1</blockquote>");
+    for (let i = 0; i < lines.length; i++) {
+      let line = lines[i];
 
-    // --- Headings ---
-    html = html.replace(/^### (.+)$/gm, "<h3>$1</h3>");
-    html = html.replace(/^## (.+)$/gm, "<h2>$1</h2>");
-    html = html.replace(/^# (.+)$/gm, "<h1>$1</h1>");
+      // --- Code block start/end ---
+      const codeMatch = line.match(/^```(\w*)/);
+      if (codeMatch) {
+        if (!inCode) {
+          flushBlockquote(); flushList();
+          inCode = true;
+          codeLang = codeMatch[1] || '';
+        } else {
+          inCode = false;
+          flushCode();
+        }
+        continue;
+      }
+      if (inCode) {
+        codeBuffer.push(line);
+        continue;
+      }
 
-    // --- Lists ---
-    html = html.replace(/^\s*-\s+(.+)$/gm, "<li>$1</li>");
-    html = html.replace(/(<li>[\s\S]*?<\/li>)/g, "<ul>$1</ul>");
-    html = html.replace(/^\s*\d+\.\s+(.+)$/gm, "<li>$1</li>");
-    html = html.replace(/(<li>[\s\S]*?<\/li>)/g, "<ol>$1</ol>");
+      // --- Blockquote ---
+      if (/^>\s?(.*)/.test(line)) {
+        flushList();
+        inBlockquote = true;
+        blockquoteBuffer.push(line.replace(/^>\s?/, ''));
+        // If next line is not a blockquote, flush
+        if (!lines[i+1] || !/^>\s?/.test(lines[i+1])) {
+          flushBlockquote();
+          inBlockquote = false;
+        }
+        continue;
+      }
 
-    // --- Bold & Italics ---
-    html = html.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
-    html = html.replace(/\*(.*?)\*/g, "<em>$1</em>");
+      // --- Lists ---
+      let ulMatch = line.match(/^\s*-\s+(.+)/);
+      let olMatch = line.match(/^\s*\d+\.\s+(.+)/);
+      if (ulMatch) {
+        flushBlockquote();
+        if (!inList || listType !== 'ul') { flushList(); inList = true; listType = 'ul'; }
+        listBuffer.push(`<li>${ulMatch[1]}</li>`);
+        // If next line is not a list, flush
+        if (!lines[i+1] || !/^\s*-\s+/.test(lines[i+1])) { flushList(); inList = false; }
+        continue;
+      }
+      if (olMatch) {
+        flushBlockquote();
+        if (!inList || listType !== 'ol') { flushList(); inList = true; listType = 'ol'; }
+        listBuffer.push(`<li>${olMatch[1]}</li>`);
+        if (!lines[i+1] || !/^\s*\d+\.\s+/.test(lines[i+1])) { flushList(); inList = false; }
+        continue;
+      }
 
-    // --- Inline code ---
-    html = html.replace(/`([^`\n]+)`/g, "<code>$1</code>");
+      // --- Headings ---
+      if (/^### (.+)/.test(line)) {
+        flushBlockquote(); flushList();
+        html += `<h3>${line.replace(/^### /, '')}</h3>`;
+        continue;
+      }
+      if (/^## (.+)/.test(line)) {
+        flushBlockquote(); flushList();
+        html += `<h2>${line.replace(/^## /, '')}</h2>`;
+        continue;
+      }
+      if (/^# (.+)/.test(line)) {
+        flushBlockquote(); flushList();
+        html += `<h1>${line.replace(/^# /, '')}</h1>`;
+        continue;
+      }
 
-    // --- Links & Images ---
-    html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
-    html = html.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1">');
+      // --- Horizontal rule ---
+      if (/^---+$/.test(line)) {
+        flushBlockquote(); flushList();
+        html += `<hr>`;
+        continue;
+      }
 
-    // --- Wrap remaining lines in <p> and escape ---
-    html = html.replace(
-      /^(?!<h|<ul>|<ol>|<pre>|<blockquote>|<img|<hr|<code|<li>)(.+)$/gm,
-      (_, line) => "<p>" + line.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") + "</p>"
-    );
+      // --- Images ---
+      if (/^!\[([^\]]*)\]\(([^)]+)\)/.test(line)) {
+        flushBlockquote(); flushList();
+        html += line.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1">');
+        continue;
+      }
 
+      // --- Links ---
+      if (/\[([^\]]+)\]\(([^)]+)\)/.test(line)) {
+        flushBlockquote(); flushList();
+        html += line.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
+        continue;
+      }
+
+      // --- Inline code, bold, italics ---
+      let escaped = line.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      escaped = escaped.replace(/`([^`\n]+)`/g, '<code>$1</code>');
+      escaped = escaped.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      escaped = escaped.replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+      // --- Paragraphs ---
+      if (escaped.trim()) {
+        flushBlockquote(); flushList();
+        html += `<p>${escaped}</p>`;
+      }
+    }
+    // Flush any remaining buffers
+    flushCode(); flushBlockquote(); flushList();
     return html;
   }
 }
