@@ -17,6 +17,7 @@ class ContentElement extends HTMLElement {
 
     // --- Code blocks first (```lang) ---
     html = html.replace(/```(\w*)\r?\n([\s\S]*?)```/g, function(_, lang, code) {
+      code = code.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
       return `<pre><code class="language-${lang}">${code}</code></pre>`;
     });
 
@@ -45,15 +46,66 @@ class ContentElement extends HTMLElement {
     html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
     html = html.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1">');
 
-    // --- Wrap remaining lines in <p> ---
-    html = html.replace(/^(?!<h|<ul>|<ol>|<pre>|<blockquote>|<img|<hr|<code|<li>)(.+)$/gm, "<p>$1</p>");
-
-    // --- Escape any leftover HTML entities ---
-    html = html.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    // --- Wrap remaining lines in <p> and escape ---
+    html = html.replace(
+      /^(?!<h|<ul>|<ol>|<pre>|<blockquote>|<img|<hr|<code|<li>)(.+)$/gm,
+      (_, line) => "<p>" + line.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") + "</p>"
+    );
 
     return html;
   }
 }
+
+// Only define once
+if (!customElements.get("mark-down")) {
+  customElements.define("mark-down", ContentElement);
+}
+
+// --- Inject CSS styles dynamically ---
+const style = document.createElement("style");
+style.textContent = `
+mark-down {
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.5;
+  color: #222;
+}
+
+mark-down blockquote {
+  border-left: 4px solid #888;
+  padding-left: 1em;
+  color: #555;
+  margin: 0.5em 0;
+  font-style: italic;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+}
+
+mark-down pre {
+  background-color: #1e1e1e;
+  color: #f8f8f2;
+  padding: 0.8em;
+  border-radius: 6px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.85em;
+  overflow-x: auto;
+  max-width: 100%;
+  margin: 0.5em 0;
+}
+
+mark-down code {
+  font-family: 'Courier New', monospace;
+  background-color: #eee;
+  padding: 0 0.3em;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+
+mark-down h1, mark-down h2, mark-down h3 {
+  margin: 0.8em 0 0.4em 0;
+}
+`;
+document.head.appendChild(style);
+
 
 // Only define once
 if (!customElements.get("mark-down")) {
