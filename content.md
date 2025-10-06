@@ -16,11 +16,11 @@ This is a **fully working Markdown site** powered by a single script.
 
 ### Code block example
 
-[js
+```js
 function helloWorld() {
   console.log("Hello, VanillaMD!");
 }
-]
+```
 
 > “Markdown, minus the nonsense.” — Felix
 
