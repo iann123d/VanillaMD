@@ -15,13 +15,7 @@ class ContentElement extends HTMLElement {
   renderMarkdown(md) {
     let html = md;
 
-    // Escape HTML
-    html = html.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-
-    // --- Horizontal rules ---
-    html = html.replace(/^---$/gm, "<hr>");
-
-    // --- Code blocks ```lang ---
+    // --- Code blocks first (```lang) ---
     html = html.replace(/```(\w*)\r?\n([\s\S]*?)```/g, function(_, lang, code) {
       return `<pre><code class="language-${lang}">${code}</code></pre>`;
     });
@@ -35,11 +29,8 @@ class ContentElement extends HTMLElement {
     html = html.replace(/^# (.+)$/gm, "<h1>$1</h1>");
 
     // --- Lists ---
-    // Unordered
     html = html.replace(/^\s*-\s+(.+)$/gm, "<li>$1</li>");
     html = html.replace(/(<li>[\s\S]*?<\/li>)/g, "<ul>$1</ul>");
-
-    // Ordered
     html = html.replace(/^\s*\d+\.\s+(.+)$/gm, "<li>$1</li>");
     html = html.replace(/(<li>[\s\S]*?<\/li>)/g, "<ol>$1</ol>");
 
@@ -50,14 +41,15 @@ class ContentElement extends HTMLElement {
     // --- Inline code ---
     html = html.replace(/`([^`\n]+)`/g, "<code>$1</code>");
 
-    // --- Links ---
+    // --- Links & Images ---
     html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
-
-    // --- Images ---
     html = html.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1">');
 
     // --- Wrap remaining lines in <p> ---
     html = html.replace(/^(?!<h|<ul>|<ol>|<pre>|<blockquote>|<img|<hr|<code|<li>)(.+)$/gm, "<p>$1</p>");
+
+    // --- Escape any leftover HTML entities ---
+    html = html.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
     return html;
   }
