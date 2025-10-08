@@ -117,3 +117,56 @@ footer a {
   color: #0a84ff;
   text-decoration: none;
 }
+
+/* Top Bar */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid #e5e5e5;
+  margin-bottom: 2rem;
+}
+
+.top-bar-left a {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #111;
+}
+
+.top-bar-right a {
+  font-size: 1rem;
+  color: #0a84ff;
+}
+
+/* Docs Page Layout */
+.docs-container {
+  display: flex;
+  gap: 2rem;
+}
+
+.sidebar {
+  width: 200px;
+  flex-shrink: 0;
+}
+
+.sidebar nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar nav li a {
+  display: block;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+}
+
+.sidebar nav li a:hover {
+  background-color: #f0f0f0;
+  text-decoration: none;
+}
+
+.docs-container main {
+  flex-grow: 1;
+}

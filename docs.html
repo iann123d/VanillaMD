@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VanillaMD Demo</title>
+  <title>VanillaMD Docs</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
   <style>
@@ -25,15 +25,26 @@
     </div>
   </header>
 
-  <header>
-    <h1>VanillaMD Demo</h1>
-    <p>Markdown, minus the nonsense.</p>
-  </header>
-
-  <main>
-    <!-- This will load content.md -->
-    <mark-down src="content.md"></mark-down>
-  </main>
+  <div class="docs-container">
+    <aside class="sidebar">
+      <nav>
+        <ul>
+          <li><a href="#introduction">Introduction</a></li>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#installation">Installation</a></li>
+          <li><a href="#how-it-works">How It Works</a></li>
+          <li><a href="#usage">Usage</a></li>
+          <li><a href="#customization">Customization</a></li>
+          <li><a href="#troubleshooting">Troubleshooting</a></li>
+          <li><a href="#contributing">Contributing</a></li>
+          <li><a href="#license">License</a></li>
+        </ul>
+      </nav>
+    </aside>
+    <main>
+      <mark-down src="docs.md"></mark-down>
+    </main>
+  </div>
 
   <footer>
     <p>Powered by <strong>VanillaMD</strong> &copy; 2025 Felix</p>
@@ -45,4 +56,3 @@
   <script>hljs.highlightAll();</script>
 </body>
 </html>
-

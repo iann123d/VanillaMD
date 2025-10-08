@@ -13,6 +13,18 @@ class ContentElement extends HTMLElement {
     }
   }
 
+  escapeHTML(str) {
+    return str.replace(/[&<>"']/g, function(match) {
+      return {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      }[match];
+    });
+  }
+
   renderMarkdown(md) {
     // Split into lines for easier block processing
     const lines = md.split(/\r?\n/);
@@ -44,7 +56,7 @@ class ContentElement extends HTMLElement {
 
       if (inCode) {
         if (line.match(/^```/)) {
-          html += `<pre><code class="language-${codeLang}">${codeBuffer.join('\n')}</code></pre>`;
+          html += `<pre><code class="language-${codeLang}">${this.escapeHTML(codeBuffer.join('\n'))}</code></pre>`;
           codeBuffer = [];
           inCode = false;
         } else {
