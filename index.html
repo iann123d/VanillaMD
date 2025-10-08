@@ -5,6 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VanillaMD Demo</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+  <style>
+    @media (prefers-color-scheme: dark) {
+      .hljs {
+        background: #2d2d2d;
+        color: #ddd;
+      }
+    }
+  </style>
 </head>
 <body>
   <header>
@@ -23,5 +32,8 @@
 
   <!-- VanillaMD runtime -->
   <script src="runtime.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
 </body>
 </html>
+

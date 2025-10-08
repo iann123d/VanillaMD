@@ -50,30 +50,39 @@ a:hover {
 
 /* Blockquotes */
 blockquote {
-  border-left: 4px solid #ccc;
-  padding-left: 1rem;
+  border-left: 5px solid #0a84ff;
+  padding: 1rem 1.5rem;
   color: #555;
   font-style: italic;
-  margin: 1rem 0;
+  margin: 1.5rem 0;
   background-color: #f9f9f9;
-  border-radius: 4px;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 /* Code styling */
 code {
   font-family: "Fira Code", monospace;
-  background-color: #f2f2f7;
+  background-color: #eef0f2;
   padding: 0.2rem 0.4rem;
   border-radius: 4px;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
 }
 
 pre {
-  background-color: #f2f2f7;
+  background-color: #1e1e1e;
+  color: #f8f8f2;
   padding: 1rem;
-  border-radius: 6px;
+  border-radius: 8px;
   overflow-x: auto;
-  margin: 1rem 0;
+  margin: 1.5rem 0;
+  border: 1px solid #333;
+}
+
+pre code {
+  background-color: transparent;
+  padding: 0;
+  font-size: 0.9rem;
 }
 
 /* Images */
