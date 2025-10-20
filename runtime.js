@@ -266,11 +266,11 @@ class ContentElement extends HTMLElement {
   }
 
   processInlineMarkdown(text) {
-    text = text.replace(/!\[([^\]]*)\]\(([^)]+)(?:\s+"([^"]+)")?\)/g, (match, alt, src, title) => {
+    text = text.replace(/!\[([^\]]*)\]\(([^\s)"]+)(?:\s+"([^"]+)")?\)/g, (match, alt, src, title) => {
       return title ? `<img src="${src}" alt="${alt}" title="${title}">` : `<img src="${src}" alt="${alt}">`;
     });
 
-    text = text.replace(/\[([^\]]+)\]\(([^)]+)(?:\s+"([^"]+)")?\)/g, (match, linkText, url, title) => {
+    text = text.replace(/\[([^\]]+)\]\(([^\s)"]+)(?:\s+"([^"]+)")?\)/g, (match, linkText, url, title) => {
       return title ? `<a href="${url}" title="${title}">${linkText}</a>` : `<a href="${url}">${linkText}</a>`;
     });
 
